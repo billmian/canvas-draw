@@ -3,9 +3,16 @@
 }
 
 #canvas {
+  margin-top: 10px;
   border: 1px solid black;
 }
 
 .color-editor {
   display: flex;
+}
+
+.action-item {
+  border: 1px solid #333;
+  padding: 4px 10px;
+  margin: 0 10px;
 }

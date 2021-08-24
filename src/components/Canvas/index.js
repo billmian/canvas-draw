@@ -1,17 +1,30 @@
-function renderCanvasDom(
-  domNode,
-  options = { style: "width:1000px;height:800px" }
-) {
+import { changeStrokeColor } from './stroke';
+import { renderRect } from './rect';
+import { drawCanvas } from './draw';
+import { clearEraser } from './erase';
+import { toImage } from './image';
+
+// 事件对象
+const eventArr = {
+  mousedown: [],
+  mousemove: [],
+  mouseup: [],
+};
+
+// 设定功能是否启动
+const flag = { drawFlag: true, eraserFlag: false };
+
+function renderCanvasDom(domNode, options = { style: 'width:1000px;height:800px' }) {
   let canvasDom;
-  if (document.getElementById("canvas")) {
-    canvasDom = document.getElementById("canvas");
+  if (document.getElementById('canvas')) {
+    canvasDom = document.getElementById('canvas');
   } else {
-    canvasDom = document.createElement("canvas");
+    canvasDom = document.createElement('canvas');
     let targetParentDom = domNode;
     if (!domNode) {
       targetParentDom = document.body;
     }
-    canvasDom.setAttribute("id", "canvas");
+    canvasDom.setAttribute('id', 'canvas');
     targetParentDom.appendChild(canvasDom);
   }
 
@@ -20,58 +33,51 @@ function renderCanvasDom(
   canvasDom.width = 1000;
 }
 
-function renderRect(attr) {
-  const { x, y, width, height, fill, stroke = "#000", lineWidth = 1 } = attr;
-  const canvasDom = document.getElementById("canvas");
-  const ctx = canvasDom.getContext("2d");
-
-  ctx.strokeStyle = stroke;
-  ctx.lineWidth = lineWidth;
-
-  ctx.strokeRect(50, 50, 180, 120); // 绘制矩形（无填充）x,y,width,height
-}
-
 function addCanvasEventListener() {
-  const canvasDom = document.getElementById("canvas");
-  const ctx = canvasDom.getContext("2d");
-  let drawFlag = false;
+  const canvasDom = document.getElementById('canvas');
+  const ctx = canvasDom.getContext('2d');
 
-  canvasDom.addEventListener("mousedown", (e) => {
-    const { offsetX, offsetY } = e;
-    console.log("这里输出 stroke 的颜色", e.target.stroke);
-    ctx.beginPath();
-    ctx.strokeStyle = e?.target?.stroke || "#000";
-    ctx.moveTo(offsetX, offsetY);
-    drawFlag = true;
+  canvasDom.addEventListener('mousedown', e => {
+    eventArr.mousedown.forEach(func => {
+      func(e, flag);
+    });
   });
-  canvasDom.addEventListener("mouseup", (e) => {
-    drawFlag = false;
-    ctx.closePath();
+
+  canvasDom.addEventListener('mouseup', e => {
+    eventArr.mouseup.forEach(func => {
+      func(e);
+    });
   });
-  canvasDom.addEventListener("mousemove", (e) => {
-    if (!drawFlag) {
-      return;
-    }
-    const { offsetX, offsetY } = e;
-    ctx.lineTo(offsetX, offsetY);
-    ctx.stroke();
+
+  canvasDom.addEventListener('mousemove', e => {
+    eventArr.mousemove.forEach(func => {
+      func(e);
+    });
   });
 }
 
+// 清除整个 canvas 画板
 function clearCanvas() {
-  const canvasDom = document.getElementById("canvas");
-  const ctx = canvasDom.getContext("2d");
+  const canvasDom = document.getElementById('canvas');
+  const ctx = canvasDom.getContext('2d');
   ctx.clearRect(0, 0, canvasDom.width, canvasDom.height);
-}
-
-function changeStrokeColor(color) {
-  const canvasDom = document.getElementById("canvas");
-  canvasDom.stroke = color;
 }
 
 function canvasInit() {
   renderCanvasDom();
+  drawCanvas(eventArr, flag);
+  clearEraser(eventArr, flag);
   addCanvasEventListener();
 }
 
-export { clearCanvas, canvasInit, renderRect, changeStrokeColor };
+function startDraw() {
+  flag.drawFlag = true;
+  flag.eraserFlag = false;
+}
+
+function startEraser() {
+  flag.eraserFlag = true;
+  flag.drawFlag = false;
+}
+
+export { clearCanvas, canvasInit, renderRect, changeStrokeColor, startDraw, startEraser, toImage };

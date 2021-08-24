@@ -1,11 +1,7 @@
-import React, { useState } from "react";
-import {
-  clearCanvas,
-  canvasInit,
-  changeStrokeColor,
-} from "./components/Canvas";
-import { Input } from "antd";
-import "./style.css";
+import React, { useState } from 'react';
+import { clearCanvas, canvasInit, changeStrokeColor, startEraser, startDraw, toImage } from './components/Canvas';
+import { Input } from 'antd';
+import './style.css';
 
 const App = () => {
   React.useEffect(() => {
@@ -16,13 +12,24 @@ const App = () => {
   return (
     <>
       <div className="container">
-        <div onClick={clearCanvas}>清空画板</div>
+        <div className="action-item" onClick={clearCanvas}>
+          清空画板
+        </div>
+        <div className="action-item" onClick={startDraw}>
+          画笔
+        </div>
+        <div className="action-item" onClick={startEraser}>
+          橡皮
+        </div>
+        <div className="action-item" onClick={toImage}>
+          保存图片
+        </div>
         <div className="color-editor">
           <Input
-            onChange={(e) => {
+            onChange={e => {
               setStrokeColor(e.target.value);
             }}
-          ></Input>
+          />
           <div
             onClick={() => {
               changeStrokeColor(strokeColor);
@@ -32,7 +39,7 @@ const App = () => {
           </div>
         </div>
       </div>
-      <canvas id="canvas"></canvas>
+      <canvas id="canvas" />
     </>
   );
 };
