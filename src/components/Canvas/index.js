@@ -2,15 +2,23 @@ function renderCanvasDom(
   domNode,
   options = { style: "width:1000px;height:800px" }
 ) {
-  const canvasDom = document.createElement("canvas");
-  let targetParentDom = domNode;
-  if (!domNode) {
-    targetParentDom = document.body;
-  }
-  canvasDom.setAttribute("id", "canvas");
+  let canvasDom;
+  console.log(
+    "🚀 ~ file: index.js ~ line 7 ~ document.getElementById(canvas)",
+    document.getElementById("canvas")
+  );
 
-  // 添加 canvas 标签
-  targetParentDom.appendChild(canvasDom);
+  if (document.getElementById("canvas")) {
+    canvasDom = document.getElementById("canvas");
+  } else {
+    canvasDom = document.createElement("canvas");
+    let targetParentDom = domNode;
+    if (!domNode) {
+      targetParentDom = document.body;
+    }
+    canvasDom.setAttribute("id", "canvas");
+    targetParentDom.appendChild(canvasDom);
+  }
 
   // 不能通过 css 设置样式
   canvasDom.height = 800;
@@ -49,6 +57,16 @@ function addCanvasEventListener() {
   });
 }
 
-renderCanvasDom();
-addCanvasEventListener();
-renderRect({ x: 10, y: 20, width: 100, height: 100 });
+function clearCanvas() {
+  const canvasDom = document.getElementById("canvas");
+  const ctx = canvasDom.getContext("2d");
+  ctx.clearRect(230, 90, 50, 50);
+}
+
+function canvasInit() {
+  renderCanvasDom();
+  addCanvasEventListener();
+  renderRect({ x: 10, y: 20, width: 100, height: 100 });
+}
+
+export { clearCanvas, canvasInit };

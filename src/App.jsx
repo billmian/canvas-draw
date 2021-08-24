@@ -1,26 +1,19 @@
 import React from "react";
+import { clearCanvas, canvasInit } from "./components/Canvas";
 import "./style.css";
 
 const App = () => {
-  const Card = () => {
-    return <div className="card-contianer"></div>;
-  };
-  const Section = () => {
-    return (
-      <div className="section-container">
-        <div>
-          <div className="section-title">这是标题</div>
-        </div>
-        <Card></Card>
-      </div>
-    );
-  };
+  React.useEffect(() => {
+    canvasInit();
+  }, []);
+
   return (
-    <div className="container">
-      <Section></Section>
-      <Section></Section>
-      <Section></Section>
-    </div>
+    <>
+      <div className="container">
+        <div onClick={clearCanvas}>清空画板</div>
+      </div>
+      <canvas id="canvas"></canvas>
+    </>
   );
 };
 
