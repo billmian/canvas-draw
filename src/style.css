@@ -1,2 +1,11 @@
 .container {
+  display: flex;
+}
+
+#canvas {
+  border: 1px solid black;
+}
+
+.color-editor {
+  display: flex;
 }

@@ -3,11 +3,6 @@ function renderCanvasDom(
   options = { style: "width:1000px;height:800px" }
 ) {
   let canvasDom;
-  console.log(
-    "🚀 ~ file: index.js ~ line 7 ~ document.getElementById(canvas)",
-    document.getElementById("canvas")
-  );
-
   if (document.getElementById("canvas")) {
     canvasDom = document.getElementById("canvas");
   } else {
@@ -39,20 +34,26 @@ function renderRect(attr) {
 function addCanvasEventListener() {
   const canvasDom = document.getElementById("canvas");
   const ctx = canvasDom.getContext("2d");
+  let drawFlag = false;
 
   canvasDom.addEventListener("mousedown", (e) => {
-    console.log("这里进行了 mousedown", e);
-    const { x, y } = e;
+    const { offsetX, offsetY } = e;
+    console.log("这里输出 stroke 的颜色", e.target.stroke);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    ctx.strokeStyle = e?.target?.stroke || "#000";
+    ctx.moveTo(offsetX, offsetY);
+    drawFlag = true;
   });
   canvasDom.addEventListener("mouseup", (e) => {
+    drawFlag = false;
     ctx.closePath();
   });
   canvasDom.addEventListener("mousemove", (e) => {
-    const { x, y } = e;
-    console.log("这里进行了移动");
-    ctx.lineTo(x, y);
+    if (!drawFlag) {
+      return;
+    }
+    const { offsetX, offsetY } = e;
+    ctx.lineTo(offsetX, offsetY);
     ctx.stroke();
   });
 }
@@ -60,13 +61,17 @@ function addCanvasEventListener() {
 function clearCanvas() {
   const canvasDom = document.getElementById("canvas");
   const ctx = canvasDom.getContext("2d");
-  ctx.clearRect(230, 90, 50, 50);
+  ctx.clearRect(0, 0, canvasDom.width, canvasDom.height);
+}
+
+function changeStrokeColor(color) {
+  const canvasDom = document.getElementById("canvas");
+  canvasDom.stroke = color;
 }
 
 function canvasInit() {
   renderCanvasDom();
   addCanvasEventListener();
-  renderRect({ x: 10, y: 20, width: 100, height: 100 });
 }
 
-export { clearCanvas, canvasInit };
+export { clearCanvas, canvasInit, renderRect, changeStrokeColor };
