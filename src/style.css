@@ -3,8 +3,13 @@
 }
 
 #canvas {
-  margin-top: 10px;
   border: 1px solid black;
+}
+
+.canvas-container {
+  margin-top: 10px;
+  width: 1000px;
+
 }
 
 .color-editor {
@@ -15,4 +20,9 @@
   border: 1px solid #333;
   padding: 4px 10px;
   margin: 0 10px;
+}
+
+.eraser-circle {
+  border-radius: 50%;
+  border: 1px solid black;
 }

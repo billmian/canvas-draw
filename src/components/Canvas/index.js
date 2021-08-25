@@ -14,7 +14,7 @@ const eventArr = {
 // 设定功能是否启动
 const flag = { drawFlag: true, eraserFlag: false };
 
-function renderCanvasDom(domNode, options = { style: 'width:1000px;height:800px' }) {
+function renderCanvasDom(domNode, { width, height }) {
   let canvasDom;
   if (document.getElementById('canvas')) {
     canvasDom = document.getElementById('canvas');
@@ -29,8 +29,8 @@ function renderCanvasDom(domNode, options = { style: 'width:1000px;height:800px'
   }
 
   // 不能通过 css 设置样式
-  canvasDom.height = 800;
-  canvasDom.width = 1000;
+  canvasDom.height = height;
+  canvasDom.width = width;
 }
 
 function addCanvasEventListener() {
@@ -63,8 +63,8 @@ function clearCanvas() {
   ctx.clearRect(0, 0, canvasDom.width, canvasDom.height);
 }
 
-function canvasInit() {
-  renderCanvasDom();
+function canvasInit({ canvasWidth, canvasHeight }) {
+  renderCanvasDom(null, { width: canvasWidth, height: canvasHeight });
   drawCanvas(eventArr, flag);
   clearEraser(eventArr, flag);
   addCanvasEventListener();

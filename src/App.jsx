@@ -3,12 +3,26 @@ import { clearCanvas, canvasInit, changeStrokeColor, startEraser, startDraw, toI
 import { Input } from 'antd';
 import './style.css';
 
+const initOption = {
+  canvasWidth: 1000,
+  canvasHeight: 800,
+};
+
 const App = () => {
+  const [eraserRadius, setEraserRadius] = React.useState();
+  const [isUsingEraser, setIsUsingEraser] = React.useState(false);
+  const [strokeColor, setStrokeColor] = useState(null);
+
   React.useEffect(() => {
-    canvasInit();
+    canvasInit({ canvasWidth: initOption.canvasWidth, canvasHeight: initOption.canvasHeight });
   }, []);
 
-  const [strokeColor, setStrokeColor] = useState(null);
+  const onCanvasMove = e => {
+    if (isUsingEraser) {
+      console.log('这里进行了 canvas 的移动：', e.pageX, e.pageY);
+    }
+  };
+
   return (
     <>
       <div className="container">
@@ -18,7 +32,13 @@ const App = () => {
         <div className="action-item" onClick={startDraw}>
           画笔
         </div>
-        <div className="action-item" onClick={startEraser}>
+        <div
+          className="action-item"
+          onClick={() => {
+            startEraser();
+            setIsUsingEraser(true);
+          }}
+        >
           橡皮
         </div>
         <div className="action-item" onClick={toImage}>
@@ -39,7 +59,10 @@ const App = () => {
           </div>
         </div>
       </div>
-      <canvas id="canvas" />
+      <div onMouseMove={onCanvasMove} className="canvas-container">
+        <canvas id="canvas" />
+        {isUsingEraser && <div className="eraser-circle" />}
+      </div>
     </>
   );
 };
