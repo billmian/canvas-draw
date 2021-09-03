@@ -12,6 +12,10 @@ function clearEraser(eventArr, flag) {
   // 这里应该画一个圆形的橡皮
   const mouseMoveListener = (e) => {
     if (!flag.eraserFlag) {
+      let eraser = document.getElementById("eraser-circle");
+      if (eraser) {
+        eraser.setAttribute("style", `display:none;`);
+      }
       return;
     }
     const { clientX, clientY } = e;
@@ -28,20 +32,20 @@ function clearEraser(eventArr, flag) {
     const containerRect = canvasContainerDom.getBoundingClientRect();
     const containerClientX = containerRect.left;
     const containerClientY = containerRect.top;
-    console.log(
-      "🚀 ~ file: erase.js ~ line 30 ~ mouseMoveListener ~ containerClientX",
-      containerClientX,
-      containerClientY,
-      clientX,
-      clientY
-    );
 
-    const eraserLeft = clientX - containerClientX - eraserRadius / 2;
-    const eraserTop = clientY - containerClientY - eraserRadius / 2;
+    let eraserLeft = clientX - containerClientX - eraserRadius / 2;
+    let eraserTop = clientY - containerClientY - eraserRadius / 2;
+
+    if (eraserLeft < 0) {
+      eraserLeft = 0;
+    }
+    if (eraserTop < 0) {
+      eraserTop = 0;
+    }
 
     eraser.setAttribute(
       "style",
-      `left:${eraserLeft}px;top:${eraserTop}px;width:${eraserRadius}px;height:${eraserRadius}px;`
+      `left:${eraserLeft}px;top:${eraserTop}px;width:${eraserRadius}px;height:${eraserRadius}px;display:block;`
     );
 
     if (isMouseDown) {
