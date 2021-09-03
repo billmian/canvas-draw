@@ -1,27 +1,29 @@
 function drawCanvas(eventArr, flag) {
-  console.log('🚀 ~ file: draw.js ~ line 2 ~ drawCanvas ~ eventArr', eventArr);
-  const canvasDom = document.getElementById('canvas');
-  const ctx = canvasDom.getContext('2d');
+  const canvasDom = document.getElementById("canvas");
+  const ctx = canvasDom.getContext("2d");
   let isMouseDown = false;
-  const mouseDownListener = e => {
+
+  const mouseDownListener = (e) => {
     if (!flag.drawFlag) {
       return;
     }
     isMouseDown = true;
     const { offsetX, offsetY } = e;
     ctx.beginPath();
-    ctx.strokeStyle = e?.target?.stroke || '#000';
+    ctx.strokeStyle = e?.target?.stroke || "#000";
     ctx.moveTo(offsetX, offsetY);
     flag.drawFlag = true;
   };
-  const mouseUpListener = e => {
+
+  const mouseUpListener = (e) => {
     if (!flag.drawFlag) {
       return;
     }
     isMouseDown = false;
     ctx.closePath();
   };
-  const mouseMoveListener = e => {
+
+  const mouseMoveListener = (e) => {
     if (!flag.drawFlag || !isMouseDown) {
       return;
     }

@@ -1,27 +1,39 @@
-import React, { useState } from 'react';
-import { clearCanvas, canvasInit, changeStrokeColor, startEraser, startDraw, toImage } from './components/Canvas';
-import { Input } from 'antd';
-import './style.css';
+import React, { useRef, useState } from "react";
+import {
+  clearCanvas,
+  canvasInit,
+  changeStrokeColor,
+  startEraser,
+  startDraw,
+  toImage,
+} from "./components/Canvas";
+import { Input } from "antd";
+import "./style.css";
 
 const initOption = {
   canvasWidth: 1000,
   canvasHeight: 800,
+  eraserRadius: 20,
 };
 
 const App = () => {
-  const [eraserRadius, setEraserRadius] = React.useState();
+  const [eraserRadius, setEraserRadius] = React.useState(
+    initOption.eraserRadius
+  );
+
+  const [eraserOffset, setEraserOffset] = React.useState({ x: -100, y: -100 });
   const [isUsingEraser, setIsUsingEraser] = React.useState(false);
   const [strokeColor, setStrokeColor] = useState(null);
 
-  React.useEffect(() => {
-    canvasInit({ canvasWidth: initOption.canvasWidth, canvasHeight: initOption.canvasHeight });
-  }, []);
+  const canvasRef = useRef(null);
 
-  const onCanvasMove = e => {
-    if (isUsingEraser) {
-      console.log('这里进行了 canvas 的移动：', e.pageX, e.pageY);
-    }
-  };
+  React.useEffect(() => {
+    canvasInit({
+      canvasWidth: initOption.canvasWidth,
+      canvasHeight: initOption.canvasHeight,
+      eraserRadius: initOption.eraserRadius,
+    });
+  }, []);
 
   return (
     <>
@@ -46,7 +58,7 @@ const App = () => {
         </div>
         <div className="color-editor">
           <Input
-            onChange={e => {
+            onChange={(e) => {
               setStrokeColor(e.target.value);
             }}
           />
@@ -59,9 +71,25 @@ const App = () => {
           </div>
         </div>
       </div>
-      <div onMouseMove={onCanvasMove} className="canvas-container">
-        <canvas id="canvas" />
-        {isUsingEraser && <div className="eraser-circle" />}
+      <div className="canvas-container" id="canvas-container">
+        <canvas id="canvas" ref={canvasRef} />
+        {isUsingEraser && (
+          <div
+            className="eraser-circle"
+            onMouseMove={(event) => {
+              event.stopPropagation();
+              event.nativeEvent.stopImmediatePropagation();
+
+              event.preventDefault();
+            }}
+            style={{
+              left: eraserOffset.x - eraserRadius / 2,
+              top: eraserOffset.y - eraserRadius / 2,
+              width: eraserRadius,
+              height: eraserRadius,
+            }}
+          />
+        )}
       </div>
     </>
   );
